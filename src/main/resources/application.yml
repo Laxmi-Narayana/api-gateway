@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # Route for Authentication & User calls
+        - id: jwt-security-route
+          uri: lb://jwt-security  # 'lb://' tells Gateway to find the service in Eureka
+          predicates:
+            - Path=/api/auth/**, /api/user/**, /api/admin/**
+        # Route for Authentication & User calls
+        - id: url-shortener-route
+          uri: lb://url-shortener  # 'lb://' tells Gateway to find the service in Eureka
+          predicates:
+            - Path=/api/v1/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8781/eureka/
+  instance:
+    prefer-ip-address: true
